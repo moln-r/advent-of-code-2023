@@ -3,68 +3,54 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+use crate::Solution;
+
 #[derive(Debug)]
 pub struct Trebuchet {
+    day: i32,
     nums: Vec<Num>,
 }
 
 impl Trebuchet {
     pub fn new() -> Trebuchet {
         Trebuchet {
+            day: 1,
             nums: Num::init(),
         }
     }
 
-    pub(crate) fn solve(&self) -> i32 {
-        println!("Solving first days problem");
-
-        let file = File::open("src/solution/input-01")
+    pub(crate) fn solve(&self) -> Solution {
+        let file = File::open("src/solution/inputs/input-01")
             .expect("Error opening file");
 
-        let mut sum = 0;
+        let mut part_one = 0;
+        let mut part_two = 0;
         for line in BufReader::new(file).lines() {
             if line.is_err() {
                 println!("Error reading a line");
             } else {
                 let line = line.unwrap();
-                // println!("Line: {}", line);
 
-                let first_number = self.find_first_number(&line);
-                let last_number = self.find_last_number(&line);
+                let first_number = self.find_number(&line, WhichPart::First, true).unwrap();
+                let last_number = self.find_number(&(line.chars().rev().collect()), WhichPart::Last, true).unwrap();
 
-                if first_number.is_none() || last_number.is_none() {
-                    panic!("Error finding a number in line: {}", line);
-                }
+                part_one += format!("{}{}", first_number, last_number).parse::<i32>().unwrap();
 
-                let mut num_as_string: String = String::new();
-                // building the number string
-                num_as_string.push(first_number.unwrap());
-                num_as_string.push(last_number.unwrap());
+                let first_number = self.find_number(&line, WhichPart::First, false).unwrap();
+                let last_number = self.find_number(&(line.chars().rev().collect()), WhichPart::Last, false).unwrap();
 
-                // converting the string to a number and adding it to the sum
-                sum += num_as_string.parse::<i32>().unwrap();
+                part_two += format!("{}{}", first_number, last_number).parse::<i32>().unwrap();
             }
         }
-        sum
+        Solution { day: self.day, part_one, part_two }
     }
 
-    fn find_first_number(&self, line: &String) -> Option<char> {
-        // println!("Finding first number in line: {}", line);
-        return self.find_number(line, WhichPart::First);
-    }
-
-    fn find_last_number(&self, line: &String) -> Option<char> {
-        // println!("Finding last number in line: {}", line);
-        let reverse_string: String = line.chars().rev().collect();
-        return self.find_number(&reverse_string, WhichPart::Last);
-    }
-
-    fn find_number(&self, string: &String, which_part: WhichPart) -> Option<char> {
+    fn find_number(&self, string: &String, which_part: WhichPart, only_digit: bool) -> Option<char> {
         for (i, c) in string.chars().enumerate() {
             if c.is_ascii_digit() {
                 // println!("It's a digit! {}", c);
                 return Some(c);
-            } else {
+            } else if !only_digit {
                 // get nums that start with char based on length left
                 let possible_nums: Vec<&Num> = self.nums.iter()
                     .filter(|n| {
@@ -75,10 +61,6 @@ impl Trebuchet {
                     })
                     .filter(|n| n.str_length <= string.len() - i)
                     .collect();
-
-                // if !possible_nums.is_empty() {
-                //     println!("Possible nums for char {}: {:?}", c, possible_nums);
-                // }
 
                 // compare num string with the line's slice
                 for num in possible_nums {
