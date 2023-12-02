@@ -9,7 +9,7 @@ fn main() {
     // let trebuchet = Trebuchet::new();
     // println!("First day's answer: {}", trebuchet.solve());
 
-    let cube_conundrum = CubeConundrum::new();
-    println!("Second day's answer: {}", cube_conundrum.solve());
+    let second_day_solution = CubeConundrum::new().solve();
+    println!("Second day's first answer is {}, second answer is {}", second_day_solution.0, second_day_solution.1);
 
 }
