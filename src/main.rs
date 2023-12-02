@@ -10,6 +10,10 @@ pub struct Solution {
     pub part_two: i32,
 }
 
+trait AdventOfCode {
+    fn solve(&self) -> Solution;
+}
+
 fn main() {
     println!("Running Advent of code 2023...");
     println!("{:?}", Trebuchet::new().solve());

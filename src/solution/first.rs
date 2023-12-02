@@ -3,7 +3,7 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use crate::Solution;
+use crate::{AdventOfCode, Solution};
 
 #[derive(Debug)]
 pub struct Trebuchet {
@@ -11,15 +11,8 @@ pub struct Trebuchet {
     nums: Vec<Num>,
 }
 
-impl Trebuchet {
-    pub fn new() -> Trebuchet {
-        Trebuchet {
-            day: 1,
-            nums: Num::init(),
-        }
-    }
-
-    pub(crate) fn solve(&self) -> Solution {
+impl AdventOfCode for Trebuchet {
+    fn solve(&self) -> Solution {
         let file = File::open("src/solution/inputs/input-01")
             .expect("Error opening file");
 
@@ -43,6 +36,15 @@ impl Trebuchet {
             }
         }
         Solution { day: self.day, part_one, part_two }
+    }
+}
+
+impl Trebuchet {
+    pub fn new() -> Trebuchet {
+        Trebuchet {
+            day: 1,
+            nums: Num::init(),
+        }
     }
 
     fn find_number(&self, string: &String, which_part: WhichPart, only_digit: bool) -> Option<char> {

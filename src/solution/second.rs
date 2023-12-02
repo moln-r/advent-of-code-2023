@@ -4,33 +4,24 @@ use std::io::{BufRead, BufReader};
 
 use regex::Regex;
 
-use crate::Solution;
+use crate::{AdventOfCode, Solution};
 
 pub struct CubeConundrum {
     day: i32,
     color_limit: HashMap<String, i32>,
 }
 
-impl CubeConundrum {
-    pub(crate) fn new() -> CubeConundrum {
-        CubeConundrum {
-            day: 2,
-            color_limit: HashMap::from([
-                ("red".to_string(), 12),
-                ("green".to_string(), 13),
-                ("blue".to_string(), 14),
-            ]),
-        }
-    }
-}
-
-impl CubeConundrum {
-    pub(crate) fn solve(&self) -> Solution {
+impl AdventOfCode for CubeConundrum {
+    fn solve(&self) -> Solution {
         let file = File::open("src/solution/inputs/input-02")
             .expect("Error opening file");
 
-        let game_num_regex = Regex::new("Game ([0-9]+):").unwrap();
         let per_color_regex = Regex::new("([0-9]+ [a-z]+)").unwrap();
+        let count_per_color = HashMap::from([
+            ("red".to_string(), 0),
+            ("green".to_string(), 0),
+            ("blue".to_string(), 0),
+        ]);
 
         let mut part_one = 0;
         let mut part_two = 0;
@@ -39,26 +30,12 @@ impl CubeConundrum {
                 println!("Error reading a line");
             } else {
                 let line = line.unwrap();
-                // println!("Line: {}", line);
 
-                // parsing game number
-                let game_num = game_num_regex.captures(&line)
-                    .unwrap()
-                    .get(1)
-                    .unwrap()
-                    .as_str()
-                    .parse::<i32>()
-                    .unwrap();
+                let game_num = Self::get_game_number(&line);
                 // println!("Game number: {}", game_num);
 
-                // parsing color info per game
                 let mut any_impossible = false;
-
-                let mut max_count_per_color = HashMap::from([
-                    ("red".to_string(), 0),
-                    ("green".to_string(), 0),
-                    ("blue".to_string(), 0),
-                ]);
+                let mut max_count_per_color = count_per_color.clone();
 
                 for color_info in per_color_regex.captures_iter(&line) {
                     let color_info = color_info.get(0).unwrap().as_str();
@@ -68,7 +45,8 @@ impl CubeConundrum {
 
                     let is_color_possible = count <= *self.color_limit.get(color).expect("Color not found");
                     // println!("Color [{}] is possible: {}", color_info, is_color_possible);
-                    if !is_color_possible {
+
+                    if !is_color_possible && !any_impossible {
                         any_impossible = true;
                     }
 
@@ -88,5 +66,30 @@ impl CubeConundrum {
             }
         }
         Solution { day: self.day, part_one, part_two }
+    }
+}
+
+impl CubeConundrum {
+    pub fn new() -> CubeConundrum {
+        CubeConundrum {
+            day: 2,
+            color_limit: HashMap::from([
+                ("red".to_string(), 12),
+                ("green".to_string(), 13),
+                ("blue".to_string(), 14),
+            ]),
+        }
+    }
+
+    fn get_game_number(line: &String) -> i32 {
+        Regex::new("Game ([0-9]+):")
+            .unwrap()
+            .captures(&line)
+            .unwrap()
+            .get(1)
+            .unwrap()
+            .as_str()
+            .parse::<i32>()
+            .unwrap()
     }
 }
