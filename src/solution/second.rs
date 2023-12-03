@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -27,8 +29,7 @@ impl AdventOfCode for CubeConundrum {
 
     fn solve(&self) -> Solution {
         // Open input file for second day
-        let file = File::open("src/solution/inputs/input-02")
-            .expect("Error opening file");
+        let file = File::open("src/solution/inputs/input-02").expect("Error opening file");
 
         // Regex to find the color info in the line
         let per_color_regex = Regex::new("([0-9]+ [a-z]+)").unwrap();
@@ -64,7 +65,8 @@ impl AdventOfCode for CubeConundrum {
 
                 // Check if the current count for the color is less than the limit
                 // If not, set the flag, because we'll have to add the game num to the part one sum
-                let is_color_possible = count <= *self.color_limit.get(color).expect("Color not found");
+                let is_color_possible =
+                    count <= *self.color_limit.get(color).expect("Color not found");
                 // println!("Color [{}] is possible: {}", color_info, is_color_possible);
                 if !is_color_possible && !any_impossible {
                     any_impossible = true;
@@ -83,7 +85,11 @@ impl AdventOfCode for CubeConundrum {
                 part_one += game_num;
             }
         }
-        Solution { day: self.day, part_one, part_two }
+        Solution {
+            day: self.day,
+            part_one,
+            part_two,
+        }
     }
 }
 
@@ -93,7 +99,7 @@ impl CubeConundrum {
             .unwrap() // Regex to find the game number in the line
             .captures(&line)
             .unwrap()
-            .get(1)// Get the first capture group
+            .get(1) // Get the first capture group
             .unwrap()
             .as_str()
             .parse::<i32>() // Parse the capture group to i32
