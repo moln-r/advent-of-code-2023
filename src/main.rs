@@ -22,6 +22,6 @@ fn main() {
     println!("{:?}", Trebuchet::new().solve());
     // Solution { day: 2, part_one: 2207, part_two: 62241 }
     println!("{:?}", CubeConundrum::new().solve());
-    // Solution { day: 3, part_one: 533775, part_two: 0 }
+    // Solution { day: 3, part_one: 533775, part_two: 78236071 }
     println!("{:?}", GearRatios::new().solve());
 }
