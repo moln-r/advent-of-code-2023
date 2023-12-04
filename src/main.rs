@@ -1,4 +1,5 @@
 use crate::solution::first::Trebuchet;
+use crate::solution::fourth::Scratchcards;
 use crate::solution::second::CubeConundrum;
 use crate::solution::third::GearRatios;
 
@@ -24,4 +25,6 @@ fn main() {
     println!("{:?}", CubeConundrum::new().solve());
     // Solution { day: 3, part_one: 533775, part_two: 78236071 }
     println!("{:?}", GearRatios::new().solve());
+    // Solution { day: 4, part_one: 24733, part_two: 0 }
+    println!("{:?}", Scratchcards::new().solve());
 }
