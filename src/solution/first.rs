@@ -23,7 +23,7 @@ impl AdventOfCode for Trebuchet {
         // Open input file for first day
         let file = File::open("src/solution/inputs/input-01").expect("Error opening file");
 
-        let mut part_one = 0;
+        let mut part_one: i64 = 0;
         let mut part_two = 0;
         // Read file line by line
         for line in BufReader::new(file).lines() {
@@ -36,7 +36,7 @@ impl AdventOfCode for Trebuchet {
                 .unwrap();
             // Format the numbers as a string, parse it to i32 and add it to the part one sum
             part_one += format!("{}{}", first_number, last_number)
-                .parse::<i32>()
+                .parse::<i64>()
                 .unwrap();
 
             // For the second part, find the first and last numbers, looking for numbers as digit or substring

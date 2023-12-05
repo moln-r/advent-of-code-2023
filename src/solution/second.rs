@@ -40,14 +40,14 @@ impl AdventOfCode for CubeConundrum {
             ("blue".to_string(), 0),
         ]);
 
-        let mut part_one = 0;
+        let mut part_one: i64 = 0;
         let mut part_two = 0;
         // Read file line by line
         for line in BufReader::new(file).lines() {
             let line = line.unwrap();
 
             // Parse the game number from the line
-            let game_num = CubeConundrum::get_game_number(&line);
+            let game_num: i64 = CubeConundrum::get_game_number(&line);
 
             // Setting up a flag to check if any color had more than the allowed number of cubes for the first part
             let mut any_impossible = false;
@@ -94,7 +94,7 @@ impl AdventOfCode for CubeConundrum {
 }
 
 impl CubeConundrum {
-    fn get_game_number(line: &String) -> i32 {
+    fn get_game_number(line: &String) -> i64 {
         Regex::new("Game ([0-9]+):")
             .unwrap() // Regex to find the game number in the line
             .captures(&line)
@@ -102,7 +102,7 @@ impl CubeConundrum {
             .get(1) // Get the first capture group
             .unwrap()
             .as_str()
-            .parse::<i32>() // Parse the capture group to i32
+            .parse::<i64>() // Parse the capture group to i32
             .unwrap()
     }
 }

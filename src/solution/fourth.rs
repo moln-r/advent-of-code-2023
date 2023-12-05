@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -21,7 +23,7 @@ impl AdventOfCode for Scratchcards {
         // We use this to calculate the number of scratchcards for part two
         let mut copy_count: HashMap<i32, i32> = HashMap::new();
 
-        let mut part_one = 0;
+        let mut part_one: i64 = 0;
         for line in BufReader::new(file).lines() {
             let line = line.unwrap();
 
@@ -73,7 +75,7 @@ impl AdventOfCode for Scratchcards {
 
             // Calculate the points with power of 2 for part one
             if winning_numbers_count > 0 {
-                part_one += 2_i32.pow((winning_numbers_count - 1) as u32);
+                part_one += 2_i32.pow((winning_numbers_count - 1) as u32) as i64;
             }
         }
         // println!("Copy count: {:?}", copy_count);

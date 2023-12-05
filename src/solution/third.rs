@@ -47,7 +47,7 @@ impl NumberInMatrix {
 // For the second part we need to store the product of characters around a gear (star)
 struct GearRatio {
     product: i32,
-    num_of_gears: i32,
+    num_of_gears: i64,
 }
 
 impl GearRatio {
@@ -80,7 +80,7 @@ impl AdventOfCode for GearRatios {
 
     fn solve(&self) -> Solution {
         let numbers_in_matrix: Vec<NumberInMatrix> = self.map_char_matrix_into_numbers();
-        let part_one = self.sum_with_surrounding_symbol(&numbers_in_matrix);
+        let part_one = self.sum_with_surrounding_symbol(&numbers_in_matrix) as i64;
         let part_two = self.sum_gear_ratios(&numbers_in_matrix);
 
         Solution {

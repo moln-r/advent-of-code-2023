@@ -1,14 +1,11 @@
-use crate::solution::first::Trebuchet;
-use crate::solution::fourth::Scratchcards;
-use crate::solution::second::CubeConundrum;
-use crate::solution::third::GearRatios;
+use crate::solution::fifth::GiveASeedAFertilizer;
 
 pub mod solution;
 
 #[derive(Debug)]
 pub struct Solution {
     pub day: i32,
-    pub part_one: i32,
+    pub part_one: i64,
     pub part_two: i32,
 }
 
@@ -20,11 +17,13 @@ trait AdventOfCode {
 fn main() {
     println!("Running Advent of code 2023...");
     // Solution { day: 1, part_one: 53651, part_two: 53894 }
-    println!("{:?}", Trebuchet::new().solve());
+    // println!("{:?}", Trebuchet::new().solve());
     // Solution { day: 2, part_one: 2207, part_two: 62241 }
-    println!("{:?}", CubeConundrum::new().solve());
+    // println!("{:?}", CubeConundrum::new().solve());
     // Solution { day: 3, part_one: 533775, part_two: 78236071 }
-    println!("{:?}", GearRatios::new().solve());
-    // Solution { day: 4, part_one: 24733, part_two: 0 }
-    println!("{:?}", Scratchcards::new().solve());
+    // println!("{:?}", GearRatios::new().solve());
+    // Solution { day: 4, part_one: 24733, part_two: 5422730 }
+    // println!("{:?}", Scratchcards::new().solve());
+    // Solution { day: 5, part_one: 0, part_two: 0 }
+    println!("{:?}", GiveASeedAFertilizer::new().solve());
 }
