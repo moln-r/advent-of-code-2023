@@ -1,4 +1,5 @@
 use crate::solution::fifth::GiveASeedAFertilizer;
+use crate::solution::sixth::WaitForIt;
 
 pub mod solution;
 
@@ -24,6 +25,8 @@ fn main() {
     // println!("{:?}", GearRatios::new().solve());
     // Solution { day: 4, part_one: 24733, part_two: 5422730 }
     // println!("{:?}", Scratchcards::new().solve());
-    // Solution { day: 5, part_one: 0, part_two: 0 }
+    // Solution { day: 5, part_one: 26273516, part_two: ? }
     println!("{:?}", GiveASeedAFertilizer::new().solve());
+    // Solution { day: 6, part_one: 0, part_two: 0 }
+    println!("{:?}", WaitForIt::new().solve());
 }
