@@ -79,7 +79,7 @@ impl AdventOfCode for CubeConundrum {
                 }
             }
             // Calculate the product of the max counts for each color and add it to the part two sum
-            part_two += max_count_per_color.values().product::<i32>();
+            part_two += max_count_per_color.values().product::<i32>() as i64;
             // If there was any color with more than the allowed number of cubes, add the game num to the part one sum
             if !any_impossible {
                 part_one += game_num;

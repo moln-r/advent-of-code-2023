@@ -21,7 +21,7 @@ impl AdventOfCode for Scratchcards {
 
         // HashMap containing the game number and number of game copies it has
         // We use this to calculate the number of scratchcards for part two
-        let mut copy_count: HashMap<i32, i32> = HashMap::new();
+        let mut copy_count: HashMap<i32, i64> = HashMap::new();
 
         let mut part_one: i64 = 0;
         for line in BufReader::new(file).lines() {

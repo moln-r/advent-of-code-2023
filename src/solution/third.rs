@@ -81,7 +81,7 @@ impl AdventOfCode for GearRatios {
     fn solve(&self) -> Solution {
         let numbers_in_matrix: Vec<NumberInMatrix> = self.map_char_matrix_into_numbers();
         let part_one = self.sum_with_surrounding_symbol(&numbers_in_matrix) as i64;
-        let part_two = self.sum_gear_ratios(&numbers_in_matrix);
+        let part_two = self.sum_gear_ratios(&numbers_in_matrix) as i64;
 
         Solution {
             day: self.day,

@@ -7,7 +7,7 @@ pub mod solution;
 pub struct Solution {
     pub day: i32,
     pub part_one: i64,
-    pub part_two: i32,
+    pub part_two: i64,
 }
 
 trait AdventOfCode {
@@ -27,6 +27,6 @@ fn main() {
     // println!("{:?}", Scratchcards::new().solve());
     // Solution { day: 5, part_one: 26273516, part_two: ? }
     println!("{:?}", GiveASeedAFertilizer::new().solve());
-    // Solution { day: 6, part_one: 0, part_two: 0 }
+    // Solution { day: 6, part_one: 2344708, part_two: 0 }
     println!("{:?}", WaitForIt::new().solve());
 }

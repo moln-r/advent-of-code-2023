@@ -46,7 +46,7 @@ impl AdventOfCode for Trebuchet {
                 .unwrap();
             // Format the numbers as a string, parse it to i32 and add it to the part two sum
             part_two += format!("{}{}", first_number, last_number)
-                .parse::<i32>()
+                .parse::<i64>()
                 .unwrap();
         }
         Solution {
