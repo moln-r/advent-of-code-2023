@@ -1,6 +1,6 @@
 extern crate core;
 
-use crate::solution::i_nineth::MirageMaintenance;
+use crate::solution::j_tenth::PipeMaze;
 
 pub mod solution;
 
@@ -35,5 +35,7 @@ fn main() {
     // Solution { day: 8, part_one: 16409, part_two: 11795205644011 }
     // println!("{:?}", HauntedWasteland::new().solve());
     // Solution { day: 9, part_one: 1969958987, part_two: 1068 }
-    println!("{:?}", MirageMaintenance::new().solve());
+    // println!("{:?}", MirageMaintenance::new().solve());
+    // Solution { day: 10, part_one: 0, part_two: 0 }
+    println!("{:?}", PipeMaze::new().solve());
 }
