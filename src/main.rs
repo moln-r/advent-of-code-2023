@@ -1,6 +1,6 @@
 extern crate core;
 
-use crate::solution::h_eight::HauntedWasteland;
+use crate::solution::i_nineth::MirageMaintenance;
 
 pub mod solution;
 
@@ -32,6 +32,8 @@ fn main() {
     // println!("{:?}", WaitForIt::new().solve());
     // Solution { day: 7, part_one: 252656917, part_two: 253499763 }
     // println!("{:?}", CamelCards::new().solve());
+    // Solution { day: 8, part_one: 16409, part_two: 11795205644011 }
+    // println!("{:?}", HauntedWasteland::new().solve());
     // Solution { day: 9, part_one: 0, part_two: 0 }
-    println!("{:?}", HauntedWasteland::new().solve());
+    println!("{:?}", MirageMaintenance::new().solve());
 }
