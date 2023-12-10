@@ -30,7 +30,7 @@ impl Direction {
 }
 
 impl HauntedWasteland {
-    fn do_step(&self, current_node: &str, direction: &Direction) -> &str {
+    fn do_step(&self, current_node: &str, direction: &Direction) -> &String {
         let node_info = self
             .nodes
             .get(current_node)
@@ -88,29 +88,70 @@ impl AdventOfCode for HauntedWasteland {
     }
 
     fn solve(&self) -> Solution {
-        // println!("{:?}", self);
-
+        // part one
         let mut current_node = "AAA";
         let last_node = "ZZZ";
         let mut steps = 0;
-
         loop {
             self.directions
                 .iter()
                 .for_each(|dir| current_node = self.do_step(current_node, dir));
             steps += self.directions.len();
-            // println!("After {} steps we are at {}, looking for {}", steps, current_node, last_node);
             if current_node == last_node {
                 break;
             }
         }
-        // println!("Current node: {}", current_node);
-        // println!("Steps: {}", steps);
+
+        // part two
+        let mut ghost_nodes = self
+            .nodes
+            .keys()
+            .filter(|node| node.ends_with('A'))
+            .collect::<Vec<&String>>();
+        // println!("Ghost nodes: {:?}", ghost_nodes);
+        let mut ghost_iter_counts: Vec<i64> = vec![];
+        let mut ghost_iters: i64 = 0;
+
+        loop {
+            self.directions.iter().for_each(|dir| {
+                // println!("Each ghost node [{:?}] goes to {:?}", ghost_nodes, dir);
+                for i in 0..ghost_nodes.len() {
+                    ghost_nodes[i] = self.do_step(ghost_nodes[i], dir);
+                }
+            });
+            ghost_iters += 1;
+
+            for i in (0..ghost_nodes.len()).rev() {
+                if ghost_nodes[i].ends_with('Z') {
+                    ghost_iter_counts.push(ghost_iters);
+                    ghost_nodes.remove(i);
+                }
+            }
+
+            if ghost_nodes.is_empty() {
+                break;
+            }
+        }
+
+        let ghost_steps = lcm_for_vector(
+            ghost_iter_counts
+                .iter()
+                .map(|i| (i * (self.directions.len() as i64)) as u128)
+                .collect::<Vec<u128>>(),
+        );
 
         Solution {
             day: self.day,
             part_one: steps.try_into().unwrap(),
-            part_two: 0,
+            part_two: ghost_steps.try_into().unwrap(),
         }
     }
+}
+
+fn lcm_for_vector(numbers: Vec<u128>) -> u128 {
+    let mut least_common_multiplier: u128 = numbers[0];
+    for i in 1..numbers.len() {
+        least_common_multiplier = num::integer::lcm(least_common_multiplier, numbers[i]);
+    }
+    least_common_multiplier
 }

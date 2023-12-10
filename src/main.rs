@@ -1,3 +1,5 @@
+extern crate core;
+
 use crate::solution::h_eight::HauntedWasteland;
 
 pub mod solution;
