@@ -1,11 +1,11 @@
+use std::collections::HashMap;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+
 use crate::solution::g_seventh::HandType::{
     FiveOfAKind, FourOfAKind, FullHouse, HighCard, OnePair, ThreeOfAKind, TwoPair,
 };
 use crate::{AdventOfCode, Solution};
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-use std::panic::panic_any;
 
 pub struct CamelCards {
     day: i32,
@@ -40,7 +40,7 @@ impl PartialEq<Self> for Hand {
 
 impl PartialOrd<Self> for Hand {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        let card_ranking = HashMap::from([('T', 1), ('J', 2), ('Q', 3), ('K', 4), ('A', 5)]);
+        let card_ranking = HashMap::from([('T', 1), ('J', 0), ('Q', 3), ('K', 4), ('A', 5)]);
         if self.hand_type == other.hand_type {
             let self_cards = self.cards.chars().collect::<Vec<char>>();
             let other_cards = other.cards.chars().collect::<Vec<char>>();
@@ -58,18 +58,28 @@ impl PartialOrd<Self> for Hand {
                             return Some(std::cmp::Ordering::Less);
                         }
                     } else if other_char.is_ascii_alphabetic() {
-                        // self is number, other is letter, other is greater
-                        return Some(std::cmp::Ordering::Less);
+                        return if other_char == 'J' {
+                            // self is number, other is wildcard, self is greater
+                            Some(std::cmp::Ordering::Greater)
+                        } else {
+                            // self is number, other is letter, other is greater
+                            Some(std::cmp::Ordering::Less)
+                        };
                     } else {
                         panic!("Invalid character");
                     }
                 } else if self_char.is_ascii_alphabetic() {
                     if other_char.is_ascii_digit() {
-                        // self is letter, other is number, self is greater
-                        return Some(std::cmp::Ordering::Greater);
+                        return if self_char == 'J' {
+                            // self is wildcard, other is number, other is greater
+                            Some(std::cmp::Ordering::Less)
+                        } else {
+                            // self is letter, other is number, self is greater
+                            Some(std::cmp::Ordering::Greater)
+                        };
                     } else if other_char.is_ascii_alphabetic() {
                         // they are both letters
-                        // T < J < Q < K < A
+                        // J < T < Q < K < A
                         let self_rank = card_ranking.get(&self_char).unwrap();
                         let other_rank = card_ranking.get(&other_char).unwrap();
                         if self_rank > other_rank {
@@ -124,25 +134,48 @@ impl Ord for Hand {
 }
 
 fn get_hand_type(cards: &String) -> HandType {
+    // println!("-----------------\nGet hand type for cards: {}", cards);
     let mut map = HashMap::new();
     for card in cards.chars() {
         let count = map.entry(card).or_insert(0);
         *count += 1;
     }
-    if map.values().any(|&x| x == 5) {
+
+    // if we use wildcard, we remove it and use it later
+    let wildcard_count = map.remove(&'J');
+    // println!("Wildcard count: {:?}", wildcard_count);
+    if wildcard_count == Option::from(5) {
         return FiveOfAKind;
-    } else if map.values().any(|&x| x == 4) {
-        return FourOfAKind;
-    } else if map.values().any(|&x| x == 3) && map.values().any(|&x| x == 2) {
-        return FullHouse;
-    } else if map.values().any(|&x| x == 3) {
-        return ThreeOfAKind;
-    } else if map.values().filter(|&x| *x == 2).count() == 2 {
-        return TwoPair;
-    } else if map.values().any(|&x| x == 2) {
-        return OnePair;
     }
-    HighCard
+
+    // we get the hand type (without potential wildcard!)
+    let mut hand_type = if map.values().any(|&x| x == 5) {
+        FiveOfAKind
+    } else if map.values().any(|&x| x == 4) {
+        FourOfAKind
+    } else if map.values().any(|&x| x == 3) && map.values().any(|&x| x == 2) {
+        FullHouse
+    } else if map.values().any(|&x| x == 3) {
+        ThreeOfAKind
+    } else if map.values().filter(|&x| *x == 2).count() == 2 {
+        TwoPair
+    } else if map.values().any(|&x| x == 2) {
+        OnePair
+    } else {
+        HighCard
+    };
+
+    // println!("Original hand type: {:?}", hand_type);
+
+    // if we use wildcard, and we had any in the hand, we improve the hand type
+    if wildcard_count.is_some() {
+        for _ in 0..wildcard_count.unwrap() {
+            hand_type = hand_type.improve();
+        }
+    }
+
+    // println!("Improved hand type: {:?}", hand_type);
+    hand_type
 }
 
 #[derive(Debug, PartialEq)]
@@ -154,6 +187,24 @@ enum HandType {
     TwoPair,
     OnePair,
     HighCard,
+}
+
+impl HandType {
+    fn improve(&self) -> HandType {
+        match self {
+            FiveOfAKind => {
+                panic!("Cannot improve FiveOfAKind!")
+            }
+            FourOfAKind => FiveOfAKind,
+            FullHouse => {
+                panic!("Cannot improve FullHouse!")
+            }
+            ThreeOfAKind => FourOfAKind,
+            TwoPair => FullHouse,
+            OnePair => ThreeOfAKind,
+            HighCard => OnePair,
+        }
+    }
 }
 
 impl AdventOfCode for CamelCards {
@@ -172,12 +223,12 @@ impl AdventOfCode for CamelCards {
                 })
                 .collect::<Vec<Hand>>();
         hands.sort();
-        // println!("{:?}", hands);
+        println!("\n{:?}", hands);
         CamelCards { day: 7, hands }
     }
 
     fn solve(&self) -> Solution {
-        let part_one = self
+        let part_two = self
             .hands
             .iter()
             .enumerate()
@@ -186,8 +237,8 @@ impl AdventOfCode for CamelCards {
 
         Solution {
             day: self.day,
-            part_one,
-            part_two: 0,
+            part_one: 0,
+            part_two,
         }
     }
 }
