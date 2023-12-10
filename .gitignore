@@ -19,3 +19,4 @@ Cargo.lock
 /target
 
 src/solution/inputs/input-05-1
+.idea
