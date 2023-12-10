@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -25,6 +27,7 @@ impl AdventOfCode for MirageMaintenance {
 
     fn solve(&self) -> Solution {
         let mut part_one = 0;
+        let mut part_two = 0;
         for report in &self.reports {
             // println!("Report: {:?}", report);
             let mut sub_reports: Vec<Vec<i32>> = vec![];
@@ -42,12 +45,26 @@ impl AdventOfCode for MirageMaintenance {
             // println!("Next value: {}", next_value);
             part_one += next_value;
             // println!("---------");
+
+            let firsts = sub_reports
+                .iter()
+                .map(|sr| *sr.first().unwrap())
+                .collect::<Vec<i32>>();
+            // println!("Firsts: {:?}", firsts);
+            let mut prev_value = 0;
+            for i in (1..firsts.len()).rev() {
+                prev_value = sub_reports[i - 1][0] - prev_value;
+            }
+            prev_value = report.first().unwrap() - prev_value;
+            // println!("Prev value: {}", prev_value);
+            part_two += prev_value;
+            // println!("---------");
         }
 
         Solution {
             day: self.day,
             part_one: part_one.try_into().unwrap(),
-            part_two: 0,
+            part_two: part_two.try_into().unwrap(),
         }
     }
 }

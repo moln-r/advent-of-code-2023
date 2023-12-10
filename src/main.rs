@@ -34,6 +34,6 @@ fn main() {
     // println!("{:?}", CamelCards::new().solve());
     // Solution { day: 8, part_one: 16409, part_two: 11795205644011 }
     // println!("{:?}", HauntedWasteland::new().solve());
-    // Solution { day: 9, part_one: 0, part_two: 0 }
+    // Solution { day: 9, part_one: 1969958987, part_two: 1068 }
     println!("{:?}", MirageMaintenance::new().solve());
 }
