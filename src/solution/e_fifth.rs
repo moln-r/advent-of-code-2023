@@ -9,7 +9,8 @@ use crate::{AdventOfCode, Solution};
 #[derive(Debug)]
 pub struct GiveASeedAFertilizer {
     day: i32,
-    seeds: Vec<i64>,
+    part_one_seeds: Vec<i64>,
+    part_two_seeds: Vec<SeedRange>,
     seed_to_soil: Vec<HowTo>,
     soil_to_fertilizer: Vec<HowTo>,
     fertilizer_to_water: Vec<HowTo>,
@@ -24,6 +25,12 @@ struct HowTo {
     destination: i64,
     source: i64,
     range: i64,
+}
+
+#[derive(Debug)]
+struct SeedRange {
+    start: i64,
+    end: i64, // exclusive
 }
 
 // seed -> soil -> fertilizer -> water -> light -> temperature -> humidity -> location
@@ -44,7 +51,9 @@ impl AdventOfCode for GiveASeedAFertilizer {
 
         let category_regex = Regex::new("(\\d+) (\\d+) (\\d+)").expect("Invalid regex");
 
-        let mut seeds = Vec::new();
+        let mut part_one_seeds = Vec::new();
+        let mut part_two_seeds = Vec::new();
+
         let mut seed_to_soil = Vec::new();
         let mut soil_to_fertilizer = Vec::new();
         let mut fertilizer_to_water = Vec::new();
@@ -92,12 +101,27 @@ impl AdventOfCode for GiveASeedAFertilizer {
                     line[line.find(':').unwrap() + 1..]
                         .split_whitespace()
                         .for_each(|seed_number| {
-                            seeds.push(
+                            part_one_seeds.push(
                                 seed_number
                                     .parse::<i64>()
                                     .expect("Invalid seed number in file"),
                             );
                         });
+
+                    let seed_list = line[line.find(':').unwrap() + 1..]
+                        .split_whitespace()
+                        .map(|s| s.parse::<i64>().expect("Invalid seed number in file"))
+                        .collect::<Vec<i64>>();
+
+                    for x in (0..seed_list.len()).step_by(2) {
+                        let first = seed_list[x];
+                        let second = seed_list[x + 1];
+
+                        part_two_seeds.push(SeedRange {
+                            start: first,
+                            end: first + second,
+                        });
+                    }
                 } else {
                     // If the current type is not seeds, we set up the storage for the current type in the iteration when we read numbers
                     current_vec = match current_type {
@@ -118,7 +142,8 @@ impl AdventOfCode for GiveASeedAFertilizer {
 
         GiveASeedAFertilizer {
             day: 5,
-            seeds,
+            part_one_seeds,
+            part_two_seeds,
             seed_to_soil,
             soil_to_fertilizer,
             fertilizer_to_water,
@@ -130,16 +155,24 @@ impl AdventOfCode for GiveASeedAFertilizer {
     }
 
     fn solve(&self) -> Solution {
-        // println!("{:?}", self);
+        Solution {
+            day: self.day,
+            part_one: self.part_one(),
+            part_two: 0,
+        }
+    }
+}
 
+impl GiveASeedAFertilizer {
+    pub fn part_one(&self) -> i64 {
         let mut seed_to_location: HashMap<i64, i64> = HashMap::new();
 
-        for seed in &self.seeds {
+        for seed in &self.part_one_seeds {
             let mut soil = 0;
             for to_soil in &self.seed_to_soil {
                 if seed >= &to_soil.source && seed < &(to_soil.source + to_soil.range) {
                     soil = seed - to_soil.source + to_soil.destination;
-                    println!("Seed {} -> Soil {}", seed, soil);
+                    // println!("Seed {} -> Soil {}", seed, soil);
                     break;
                 }
             }
@@ -152,7 +185,7 @@ impl AdventOfCode for GiveASeedAFertilizer {
                 if soil >= to_fertilizer.source && soil < to_fertilizer.source + to_fertilizer.range
                 {
                     fertilizer = soil - to_fertilizer.source + to_fertilizer.destination;
-                    println!("Soil {} -> Fertilizer {}", soil, fertilizer);
+                    // println!("Soil {} -> Fertilizer {}", soil, fertilizer);
                     break;
                 }
             }
@@ -164,7 +197,7 @@ impl AdventOfCode for GiveASeedAFertilizer {
             for to_water in &self.fertilizer_to_water {
                 if fertilizer >= to_water.source && fertilizer < to_water.source + to_water.range {
                     water = fertilizer - to_water.source + to_water.destination;
-                    println!("Fertilizer {} -> Water {}", fertilizer, water);
+                    // println!("Fertilizer {} -> Water {}", fertilizer, water);
                     break;
                 }
             }
@@ -176,7 +209,7 @@ impl AdventOfCode for GiveASeedAFertilizer {
             for to_light in &self.water_to_light {
                 if water >= to_light.source && water < to_light.source + to_light.range {
                     light = water - to_light.source + to_light.destination;
-                    println!("Water {} -> Light {}", water, light);
+                    // println!("Water {} -> Light {}", water, light);
                     break;
                 }
             }
@@ -190,7 +223,7 @@ impl AdventOfCode for GiveASeedAFertilizer {
                     && light < to_temperature.source + to_temperature.range
                 {
                     temperature = light - to_temperature.source + to_temperature.destination;
-                    println!("Light {} -> Temperature {}", light, temperature);
+                    // println!("Light {} -> Temperature {}", light, temperature);
                     break;
                 }
             }
@@ -204,7 +237,7 @@ impl AdventOfCode for GiveASeedAFertilizer {
                     && temperature < to_humidity.source + to_humidity.range
                 {
                     humidity = temperature - to_humidity.source + to_humidity.destination;
-                    println!("Temperature {} -> Humidity {}", temperature, humidity);
+                    // println!("Temperature {} -> Humidity {}", temperature, humidity);
                     break;
                 }
             }
@@ -218,7 +251,7 @@ impl AdventOfCode for GiveASeedAFertilizer {
                     && humidity < to_location.source + to_location.range
                 {
                     location = humidity - to_location.source + to_location.destination;
-                    println!("Humidity {} -> Location {}", humidity, location);
+                    // println!("Humidity {} -> Location {}", humidity, location);
                     break;
                 }
             }
@@ -227,12 +260,6 @@ impl AdventOfCode for GiveASeedAFertilizer {
             }
             seed_to_location.insert(*seed, location);
         }
-        println!("Seed to Location: {:?}", seed_to_location);
-
-        Solution {
-            day: self.day,
-            part_one: *seed_to_location.values().min().unwrap(),
-            part_two: 0,
-        }
+        *seed_to_location.values().min().unwrap()
     }
 }

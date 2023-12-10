@@ -1,5 +1,4 @@
-use crate::solution::fifth::GiveASeedAFertilizer;
-use crate::solution::sixth::WaitForIt;
+use crate::solution::g_seventh::CamelCards;
 
 pub mod solution;
 
@@ -26,7 +25,9 @@ fn main() {
     // Solution { day: 4, part_one: 24733, part_two: 5422730 }
     // println!("{:?}", Scratchcards::new().solve());
     // Solution { day: 5, part_one: 26273516, part_two: ? }
-    println!("{:?}", GiveASeedAFertilizer::new().solve());
-    // Solution { day: 6, part_one: 2344708, part_two: 0 }
-    println!("{:?}", WaitForIt::new().solve());
+    // println!("{:?}", GiveASeedAFertilizer::new().solve());
+    // Solution { day: 6, part_one: 2344708, part_two: 30125202 }
+    // println!("{:?}", WaitForIt::new().solve());
+    // Solution { day: 7, part_one: 252656917, part_two: 0 }
+    println!("{:?}", CamelCards::new().solve());
 }
