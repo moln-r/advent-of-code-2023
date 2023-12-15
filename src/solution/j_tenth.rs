@@ -12,7 +12,7 @@ pub struct PipeMaze {
     test_maze: Vec<Vec<char>>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 struct Position {
     x: usize,
     y: usize,
@@ -36,6 +36,7 @@ impl Direction {
         }
     }
 }
+
 impl AdventOfCode for PipeMaze {
     fn new() -> Self {
         let maze =
@@ -46,12 +47,13 @@ impl AdventOfCode for PipeMaze {
                 .collect::<Vec<Vec<char>>>();
 
         let test_maze = vec![
-            // x  0    1    2    3    4    // y
-            vec!['.', '.', '.', '.', '.'], // 0
-            vec!['.', 'S', '-', '7', '.'], // 1
-            vec!['.', '|', '.', '|', '.'], // 2
-            vec!['.', 'L', '-', 'J', '.'], // 3
-            vec!['.', '.', '.', '.', '.'], // 4
+            // x  0    1    2    3    4    5    6    // y
+            vec!['.', '.', '.', '.', '.', '.', '.'], // 0
+            vec!['.', 'S', '7', 'F', '-', '7', '.'], // 1
+            vec!['.', '|', 'L', 'J', 'x', '|', '.'], // 2
+            vec!['.', '|', 'F', '7', 'x', '|', '.'], // 3
+            vec!['.', 'L', 'J', 'L', '-', 'J', '.'], // 4
+            vec!['.', '.', '.', '.', '.', '.', '.'], // 5
         ];
 
         // .....
@@ -68,12 +70,12 @@ impl AdventOfCode for PipeMaze {
     }
 
     fn solve(&self) -> Solution {
-        let maze = &self.maze;
         let mut pipeline = vec![];
-        // let maze = &self.test_maze;
+        // let maze = &self.maze;
+        let maze = &self.test_maze;
 
         let start_position = find_start(maze);
-        println!("{:?}", start_position);
+        println!("Start position: {:?}", start_position);
 
         let mut position: Position = start_position.clone();
         let mut previous_direction: Option<Direction> = None;
@@ -105,10 +107,55 @@ impl AdventOfCode for PipeMaze {
             step, half
         );
 
+        let mut pipe_count = 0;
+        let mut inside_count = 0;
+        let mut inside = false;
+        for (y, row) in maze.iter().enumerate() {
+            for (x, col) in row.iter().enumerate() {
+                if pipeline.contains(&Position { x, y }) {
+                    print!("p");
+                    // if we hit a pipe we save state until it's not a pipe anymore
+                    if pipe_count > 1 && char_at_position(maze, &Position { x, y }) == '-' {
+                    } else {
+                        pipe_count += 1;
+                    }
+                } else {
+                    if inside {
+                        print!("i");
+                        // we were inside, and we're still there because we didn't hit a pipe
+                        inside_count += 1;
+                    } else {
+                        if pipe_count > 0 {
+                            // we were on the pipe before, but now we're not, our state might have changed
+                            // if the pipe count is odd, our state changes
+                            if pipe_count % 2 != 0 {
+                                inside = !inside;
+                            }
+                            // reset pipe count
+                            pipe_count = 0;
+                        } else {
+                            // we were not on the pipe before, so we're still not
+                            // we're outside, we do nothing
+                            print!("o");
+                        }
+
+                        if inside {
+                            print!("i");
+                            inside_count += 1;
+                        }
+                    }
+                }
+            }
+            println!();
+            // reset before next row
+            pipe_count = 0;
+            inside = false;
+        }
+
         Solution {
             day: self.day,
             part_one: half.try_into().unwrap(),
-            part_two: 0,
+            part_two: inside_count.try_into().unwrap(),
         }
     }
 }
