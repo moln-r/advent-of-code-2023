@@ -1,6 +1,6 @@
 extern crate core;
 
-use crate::solution::j_tenth::PipeMaze;
+use crate::solution::m_thirteenth::PointOfIncidence;
 
 pub mod solution;
 
@@ -20,22 +20,34 @@ fn main() {
     println!("Running Advent of code 2023...");
     // Solution { day: 1, part_one: 53651, part_two: 53894 }
     // println!("{:?}", Trebuchet::new().solve());
+
     // Solution { day: 2, part_one: 2207, part_two: 62241 }
     // println!("{:?}", CubeConundrum::new().solve());
+
     // Solution { day: 3, part_one: 533775, part_two: 78236071 }
     // println!("{:?}", GearRatios::new().solve());
+
     // Solution { day: 4, part_one: 24733, part_two: 5422730 }
     // println!("{:?}", Scratchcards::new().solve());
+
     // Solution { day: 5, part_one: 26273516, part_two: ? }
     // println!("{:?}", GiveASeedAFertilizer::new().solve());
+
     // Solution { day: 6, part_one: 2344708, part_two: 30125202 }
     // println!("{:?}", WaitForIt::new().solve());
+
     // Solution { day: 7, part_one: 252656917, part_two: 253499763 }
     // println!("{:?}", CamelCards::new().solve());
+
     // Solution { day: 8, part_one: 16409, part_two: 11795205644011 }
     // println!("{:?}", HauntedWasteland::new().solve());
+
     // Solution { day: 9, part_one: 1969958987, part_two: 1068 }
     // println!("{:?}", MirageMaintenance::new().solve());
+
     // Solution { day: 10, part_one: 0, part_two: 0 }
-    println!("{:?}", PipeMaze::new().solve());
+    // println!("{:?}", PipeMaze::new().solve());
+
+    // Solution { day: 13, part_one: 0, part_two: 0 }
+    println!("{:?}", PointOfIncidence::new().solve());
 }
